@@ -1,14 +1,6 @@
-## [YOLO v5](https://github.com/ultralytics/yolov5)在医疗领域中消化内镜目标检测的应用
+## [YOLO v5](https://github.com/ultralytics/yolov5)自定义数据集检测
 
 ### YOLO v5训练自己数据集详细教程
-
-**Xu Jing**
-
-------
-:fire: 由于官方新版YOLO v5的backbone和部分参数调整，导致很多小伙伴下载最新官方预训练模型不可用，这里提供原版的YOLO v5的预训练模型的百度云盘下载地址
-
-链接：https://pan.baidu.com/s/1SDwp6I_MnRLK45QdB3-yNw 
-提取码：423j
 
 ------
 
@@ -224,9 +216,7 @@ $ python3 detect.py --source ./inference/images/ --weights weights/yolov5x.pt --
 $ python3 detect.py --source test.mp4 --weights weights/yolov5x.pt --conf 0.4
 ```
 
-<img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/t1.jpg">
 
-<img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/20200514_p6_5_247_one.jpg">
 
 
 **Reference**
