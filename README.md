@@ -24,7 +24,7 @@
 <img align="center" src="readmepic/readme1/YOLOv4_author2.jpg" width="800">
 
 
-#### 0.环境配置
+#### 0、环境配置
 
 安装必要的python package和配置相关环境
 
@@ -33,16 +33,11 @@
 # torch==1.3.0
 # torchvision==0.4.1
 
-# git clone yolo v5 repo
-git clone https://github.com/ultralytics/yolov5 # clone repo
-# 下载官方的样例数据（这一步可以省略）
-python3 -c "from yolov5.utils.google_utils import gdrive_download; gdrive_download('1n_oKgR81BJtqk75b00eAjdv03qVCQn2f','coco128.zip')" # download dataset
-cd yolov5
 # 安装必要的package
 pip3 install -U -r requirements.txt
 ```
 
-#### 1.创建数据集的配置文件`dataset.yaml`
+#### 1、创建数据集的配置文件`dataset.yaml`
 
 [data/coco128.yaml](https://github.com/ultralytics/yolov5/blob/master/data/coco128.yaml)来自于COCO train2017数据集的前128个训练图像，可以基于该`yaml`修改自己数据集的`yaml`文件
 
@@ -58,7 +53,7 @@ nc: 3
 names: ['QP', 'NY', 'QG']
  ```
 
-#### 2.创建标注文件
+#### 2、创建标注文件
 
 可以使用LabelImg,Labme,[Labelbox](https://labelbox.com/), [CVAT](https://github.com/opencv/cvat)来标注数据，对于目标检测而言需要标注bounding box即可。然后需要将标注转换为和**darknet format**相同的标注形式，每一个图像生成一个`*.txt`的标注文件（如果该图像没有标注目标则不用创建`*.txt`文件）。创建的`*.txt`文件遵循如下规则：
 
@@ -97,7 +92,7 @@ datasets/score/labels/train/000000109622.txt  # label
 
 <img width="500" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/78174482-307bb800-740e-11ea-8b09-840693671042.png">
 
-#### 3.组织训练集的目录
+#### 3、组织训练集的目录
 
 将训练集train和验证集val的images和labels文件夹按照如下的方式进行存放
 
@@ -105,7 +100,7 @@ datasets/score/labels/train/000000109622.txt  # label
 
 至此数据准备阶段已经完成，过程中我们假设算法工程师的数据清洗和数据集的划分过程已经自行完成。
 
-#### 4.选择模型backbone进行模型配置文件的修改
+#### 4、选择模型backbone进行模型配置文件的修改
 
 在项目的`./models`文件夹下选择一个需要训练的模型，这里我们选择[yolov5x.yaml](https://github.com/ultralytics/yolov5/blob/master/models/yolov5x.yaml),最大的一个模型进行训练，参考官方README中的[table](https://github.com/ultralytics/yolov5#pretrained-checkpoints),了解不同模型的大小和推断速度。如果你选定了一个模型，那么需要修改模型对应的`yaml`文件
 
@@ -159,7 +154,7 @@ head:
 
 ```
 
-#### 5.Train
+#### 5、Train
 
 ```bash
 # Train yolov5x on score for 300 epochs
@@ -169,7 +164,7 @@ $ python3 train.py --img-size 640 --batch-size 16 --epochs 300 --data ./data/sco
 ```
 
 
-#### 6.Visualize
+#### 6、Visualize
 
 开始训练后，查看`train*.jpg`图片查看训练数据，标签和数据增强，如果你的图像显示标签或数据增强不正确，你应该查看你的数据集的构建过程是否有问题
 
@@ -194,7 +189,7 @@ $ python3 train.py --img-size 640 --batch-size 16 --epochs 300 --data ./data/sco
 
 <img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/results.png">
 
-#### 7.推断
+#### 7、推断
 
 ```python
 $ python3 detect.py --source file.jpg  # image 
@@ -207,8 +202,7 @@ $ python3 detect.py --source file.jpg  # image
 
 
 ```python
-# inference  /home/myuser/xujing/EfficientDet-Pytorch/dataset/test/ 文件夹下的图像
-$ python3 detect.py --source /home/myuser/xujing/EfficientDet-Pytorch/dataset/test/ --weights weights/best.pt --conf 0.1
+$ python3 detect.py --source /path/to/dataset/test/ --weights weights/best.pt --conf 0.1
 
 $ python3 detect.py --source ./inference/images/ --weights weights/yolov5x.pt --conf 0.5
 

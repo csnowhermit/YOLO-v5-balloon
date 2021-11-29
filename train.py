@@ -256,12 +256,12 @@ def train(hyp):
 
             # Loss
             # nt = targets.shape[0]
-            if len(targets) == targets.shape[0]:
-                print("paths:", paths)
-                print("nt:", targets.shape[0], len(targets))
-                print("targets.shape:", targets.shape)
-            else:
-                print("!@#$$$$$!@#$%")
+            # if len(targets) == targets.shape[0]:
+            #     print("paths:", paths)
+            #     print("nt:", targets.shape[0], len(targets))
+            #     print("targets.shape:", targets.shape)
+            # else:
+            #     print("!@#$$$$$!@#$%")
 
             loss, loss_items = compute_loss(pred, targets.to(device), model)
             if not torch.isfinite(loss):
@@ -375,8 +375,8 @@ def train(hyp):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', type=int, default=300)
-    parser.add_argument('--batch-size', type=int, default=16)
-    parser.add_argument('--cfg', type=str, default='models/yolov5s.yaml', help='*.cfg path')
+    parser.add_argument('--batch-size', type=int, default=4)
+    parser.add_argument('--cfg', type=str, default='models/balloon/yolov5s.yaml', help='*.cfg path')
     parser.add_argument('--data', type=str, default='data/balloon.yaml', help='*.data path')
     parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='train,test sizes')
     parser.add_argument('--rect', action='store_true', help='rectangular training')
@@ -388,7 +388,7 @@ if __name__ == '__main__':
     parser.add_argument('--cache-images', action='store_true', help='cache images for faster training')
     parser.add_argument('--weights', type=str, default='', help='initial weights path')
     parser.add_argument('--name', default='', help='renames results.txt to results_name.txt if supplied')
-    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')    # 这里默认为gpu，使用cpu需要手动指定cpu
     parser.add_argument('--adam', action='store_true', help='use adam optimizer')
     parser.add_argument('--multi-scale', action='store_true', help='vary img-size +/- 50%')
     parser.add_argument('--single-cls', action='store_true', help='train as single-class dataset')

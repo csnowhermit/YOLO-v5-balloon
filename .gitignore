@@ -1,8 +1,6 @@
 # Data files and directories common in repo root
-datasets/
 logs/
 *.h5
-*.pt
 results/
 temp/
 test/
@@ -63,5 +61,6 @@ input*/
 *.spec
 *.mp4
 
-*.jpg
 runs/
+weights/best.pt
+weights/last.pt
