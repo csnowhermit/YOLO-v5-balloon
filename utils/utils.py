@@ -431,7 +431,7 @@ def build_targets(p, targets, model):
     na, nt = det.na, targets.shape[0]  # number of anchors, targets
     # na, nt = det.na, len(targets)
     # print("targets:", targets)
-    print("na, nt: %s %s" % (na, nt))
+    # print("na, nt: %s %s" % (na, nt))
     tcls, tbox, indices, anch = [], [], [], []
     gain = torch.ones(6, device=targets.device)  # normalized to gridspace gain
     off = torch.tensor([[1, 0], [0, 1], [-1, 0], [0, -1]], device=targets.device).float()  # overlap offsets

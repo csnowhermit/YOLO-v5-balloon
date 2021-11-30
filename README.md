@@ -2,27 +2,6 @@
 
 ### YOLO v5训练自己数据集详细教程
 
-------
-
-+ YOLOv4还没有退热，YOLOv5已经发布！
-
-+ 6月9日，Ultralytics公司开源了YOLOv5，离上一次YOLOv4发布不到50天。而且这一次的YOLOv5是完全基于PyTorch实现的！
-
-+ YOLO v5的主要贡献者是YOLO v4中重点介绍的马赛克数据增强的作者
-
-<a href="https://apps.apple.com/app/id1452689527" target="_blank">
-<img src="readmepic/readme1/82944393-f7644d80-9f4f-11ea-8b87-1a5b04f555f1.jpg" width="1000"></a>
-
-
-
-> 本项目描述了如何基于自己的数据集训练YOLO v5
-
-<img align="center" src="readmepic/readme1/84200349-729f2680-aa5b-11ea-8f9a-604c9e01a658.png" width="1000">
-
-但是YOLO v4的二作提供给我们的信息和官方提供的还是有一些出入：
-
-<img align="center" src="readmepic/readme1/YOLOv4_author2.jpg" width="800">
-
 
 #### 0、环境配置
 
@@ -42,20 +21,20 @@ pip3 install -U -r requirements.txt
 [data/coco128.yaml](https://github.com/ultralytics/yolov5/blob/master/data/coco128.yaml)来自于COCO train2017数据集的前128个训练图像，可以基于该`yaml`修改自己数据集的`yaml`文件
 
  ```ymal
- # train and val datasets (image directory or *.txt file with image paths)
-train: ./datasets/score/images/train/
-val: ./datasets/score/images/val/
+# train and val datasets (image directory or *.txt file with image paths)
+train: ./datasets/balloon/images/train/
+val: ./datasets/balloon/images/val/
 
 # number of classes
-nc: 3
+nc: 1
 
 # class names
-names: ['QP', 'NY', 'QG']
+names: ['balloon']
  ```
 
 #### 2、创建标注文件
 
-可以使用LabelImg,Labme,[Labelbox](https://labelbox.com/), [CVAT](https://github.com/opencv/cvat)来标注数据，对于目标检测而言需要标注bounding box即可。然后需要将标注转换为和**darknet format**相同的标注形式，每一个图像生成一个`*.txt`的标注文件（如果该图像没有标注目标则不用创建`*.txt`文件）。创建的`*.txt`文件遵循如下规则：
+可以使用LabelImg、Labme、[Labelbox](https://labelbox.com/)、[CVAT](https://github.com/opencv/cvat)来标注数据，对于目标检测而言需要标注bounding box即可。然后需要将标注转换为和**darknet format**相同的标注形式，每一个图像生成一个`*.txt`的标注文件（如果该图像没有标注目标则不用创建`*.txt`文件）。创建的`*.txt`文件遵循如下规则：
 
 - 每一行存放一个标注类别
 - 每一行的内容包括`class x_center y_center width height`
@@ -90,26 +69,49 @@ datasets/score/labels/train/000000109622.txt  # label
 ```
 如果一个标注文件包含5个person类别（person在coco数据集中是排在第一的类别因此index为0）：
 
-<img width="500" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/78174482-307bb800-740e-11ea-8b09-840693671042.png">
+标注文件的内容如下（坐标使用归一化之后的）：
+
+``` python
+# 类别id centerx centery width height
+0 0.654785 0.559245 0.135742 0.160156
+0 0.668457 0.685547 0.168945 0.144531
+```
 
 #### 3、组织训练集的目录
 
 将训练集train和验证集val的images和labels文件夹按照如下的方式进行存放
 
-<img width="500" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/datalist.png">
+``` python
+./datasets/
+|——balloon/
+	|——images/
+		|——train/
+			|——001.jpg
+			|——002.jpg
+		|——val/
+			|——101.jpg
+			|——102.jpg
+		|——val.shape文件
+	|——labels/
+		|——train/
+			|——001.txt
+			|——002.txt
+		|——val/
+			|——101.txt
+			|——102.txt
+```
 
 至此数据准备阶段已经完成，过程中我们假设算法工程师的数据清洗和数据集的划分过程已经自行完成。
 
 #### 4、选择模型backbone进行模型配置文件的修改
 
-在项目的`./models`文件夹下选择一个需要训练的模型，这里我们选择[yolov5x.yaml](https://github.com/ultralytics/yolov5/blob/master/models/yolov5x.yaml),最大的一个模型进行训练，参考官方README中的[table](https://github.com/ultralytics/yolov5#pretrained-checkpoints),了解不同模型的大小和推断速度。如果你选定了一个模型，那么需要修改模型对应的`yaml`文件
+在项目的`./models`文件夹下选择一个需要训练的模型，这里我们选择[yolov5s.yaml](https://github.com/ultralytics/yolov5/blob/master/models/yolov5s.yaml)，最大的一个模型进行训练，参考官方README中的[table](https://github.com/ultralytics/yolov5#pretrained-checkpoints)，了解不同模型的大小和推断速度。如果你选定了一个模型，那么需要修改模型对应的`yaml`文件
 
 ```yaml
-
 # parameters
-nc: 3  # number of classes   <------------------  UPDATE to match your dataset
-depth_multiple: 1.33  # model depth multiple
-width_multiple: 1.25  # layer channel multiple
+nc: 1  # number of classes
+depth_multiple: 0.33  # model depth multiple
+width_multiple: 0.50  # layer channel multiple
 
 # anchors
 anchors:
@@ -151,35 +153,26 @@ head:
 
    [[], 1, Detect, [nc, anchors]],  # Detect(P3, P4, P5)
   ]
-
 ```
 
 #### 5、Train
 
 ```bash
-# Train yolov5x on score for 300 epochs
+# Train yolov5s on score for 300 epochs
 
-$ python3 train.py --img-size 640 --batch-size 16 --epochs 300 --data ./data/score.yaml --cfg ./models/score/yolov5x.yaml --weights weights/yolov5x.pt
-
+$ python3 train.py --img-size 640 --batch-size 16 --epochs 300 --data ./data/balloon.yaml --cfg ./models/balloon/yolov5s.yaml --weights weights/yolov5s.pt
 ```
 
 
 #### 6、Visualize
 
-开始训练后，查看`train*.jpg`图片查看训练数据，标签和数据增强，如果你的图像显示标签或数据增强不正确，你应该查看你的数据集的构建过程是否有问题
+开始训练后，查看`train*.jpg`图片查看训练数据，标签和数据增强，如果你的图像显示标签或数据增强不正确，你应该查看你的数据集的构建过程是否有问题。
 
-<img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/train_batch0.jpg">
+一个训练epoch完成后，查看`test_batch0_gt.jpg`查看batch 0 ground truth的labels。
 
-一个训练epoch完成后，查看`test_batch0_gt.jpg`查看batch 0 ground truth的labels
+查看`test_batch0_pred.jpg`查看test batch 0的预测。
 
-
-<img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/test_batch0_gt.jpg">
-
-查看`test_batch0_pred.jpg`查看test batch 0的预测
-
-<img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/test_batch0_pred.jpg">
-
-训练的losses和评价指标被保存在Tensorboard和`results.txt`log文件。`results.txt`在训练结束后会被可视化为`results.png`
+训练的losses和评价指标被保存在Tensorboard和`results.txt`log文件。`results.txt`在训练结束后会被可视化为`results.png`。
 
 ```python
 >>> from utils.utils import plot_results
@@ -187,27 +180,25 @@ $ python3 train.py --img-size 640 --batch-size 16 --epochs 300 --data ./data/sco
 # 如果你是用远程连接请安装配置Xming: https://blog.csdn.net/akuoma/article/details/82182913
 ```
 
-<img width="1000" align="center" alt="Screen Shot 2020-04-01 at 11 44 26 AM" src="./readmepic/readme2/pic/results.png">
-
-#### 7、推断
+#### 7、推理过程
 
 ```python
 $ python3 detect.py --source file.jpg  # image 
                             file.mp4  # video
                             ./dir  # directory
                             0  # webcam
-                            rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa  # rtsp stream
-                            http://112.50.243.8/PLTV/88888888/224/3221225900/1.m3u8  # http stream
+                            rtsp://127.0.0.1/rtplive/470011e600ef003a004ee33696235daa  # rtsp stream
+                            http://1127.0.0.1/PLTV/88888888/224/3221225900/1.m3u8  # http stream
 ````
 
 
 ```python
 $ python3 detect.py --source /path/to/dataset/test/ --weights weights/best.pt --conf 0.1
 
-$ python3 detect.py --source ./inference/images/ --weights weights/yolov5x.pt --conf 0.5
+$ python3 detect.py --source ./inference/images/ --weights weights/yolov5s.pt --conf 0.5
 
 # inference  视频
-$ python3 detect.py --source test.mp4 --weights weights/yolov5x.pt --conf 0.4
+$ python3 detect.py --source test.mp4 --weights weights/yolov5s.pt --conf 0.4
 ```
 
 
